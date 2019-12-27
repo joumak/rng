@@ -120,30 +120,12 @@ interface EventMetaInterface {
   public function removeGroup($group_id);
 
   /**
-   * Gets configuration for maximum permitted registrants on this event.
-   *
-   * @return integer|EventMetaInterface::CAPACITY_UNLIMITED
-   *   Maximum amount of registrants (>= 0), or unlimited.
-   */
-  public function getRegistrantCapacity();
-
-  /**
-   * Calculates how many more registrants can be added to this event.
-   *
-   * This value will not be negative if there are excessive registrations.
-   *
-   * @return integer|EventMetaInterface::CAPACITY_UNLIMITED
-   *   Number of new registrants allowed (>= 0), or unlimited.
-   */
-  public function remainingRegistrantCapacity();
-
-  /**
    * Gets configuration for maximum permitted registrations on this event.
    *
    * @return integer|EventMetaInterface::CAPACITY_UNLIMITED
    *   Maximum amount of registrations (>= 0), or unlimited.
    */
-  public function getRegistrationCapacity();
+  public function getCapacity();
 
   /**
    * Calculates how many more registrations can be added to this event.
@@ -153,15 +135,7 @@ interface EventMetaInterface {
    * @return integer|EventMetaInterface::CAPACITY_UNLIMITED
    *   Number of new registrations allowed (>= 0), or unlimited.
    */
-  public function remainingRegistrationCapacity();
-
-  /**
-   * Checks if a registrant is allowed to register on a wait list on this event.
-   *
-   * @return bool
-   *   Whether wait list registrations are allowed.
-   */
-  public function allowWaitList();
+  public function remainingCapacity();
 
   /**
    * Get minimum number of registrants allowed per registration.
@@ -209,15 +183,6 @@ interface EventMetaInterface {
    *   An entity query.
    */
   function buildRegistrationQuery();
-
-  /**
-   * Builds a entity query for registrants with conditions referencing this
-   * event via the registration entity.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   An entity query.
-   */
-  function buildEventRegistrantQuery();
 
   /**
    * Get all registrations for this event.
@@ -400,10 +365,5 @@ interface EventMetaInterface {
    * Access rules determine registration operation grants.
    */
   function addDefaultAccess();
-
-  /**
-   * Create messages for Event from Default messages for this Event Type.
-   */
-  function createDefaultEventMessages();
 
 }

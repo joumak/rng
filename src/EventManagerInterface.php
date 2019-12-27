@@ -35,25 +35,10 @@ interface EventManagerInterface {
   /**
    * ID of an `integer` field attached to an event bundle.
    *
-   * The absolute maximum number of registrants that can be signed up
-   * for an event. A negative or missing value indicates unlimited capacity.
-   */
-  const FIELD_REGISTRANTS_CAPACITY = 'rng_registrants_capacity';
-
-  /**
-   * ID of an `integer` field attached to an event bundle.
-   *
    * The absolute maximum number of registrations that can be created
    * for an event. A negative or missing value indicates unlimited capacity.
    */
-  const FIELD_REGISTRATIONS_CAPACITY = 'rng_registrations_capacity';
-
-  /**
-   * ID of an `boolean` field attached to an event bundle.
-   *
-   * Whether an event allows a wait list.
-   */
-  const FIELD_WAIT_LIST = 'rng_wait_list';
+  const FIELD_CAPACITY = 'rng_capacity';
 
   /**
    * ID of an `email` field attached to an event bundle.
@@ -75,14 +60,14 @@ interface EventManagerInterface {
    *
    * The minimum number of registrants per registration associated.
    */
-  const FIELD_REGISTRATION_REGISTRANTS_MINIMUM = 'rng_registration_registrants_min';
+  const FIELD_REGISTRATION_REGISTRANTS_MINIMUM = 'rng_registrants_minimum';
 
   /**
    * ID of an `integer` field attached to an event bundle.
    *
    * The maximum number of registrants per registration associated.
    */
-  const FIELD_REGISTRATION_REGISTRANTS_MAXIMUM = 'rng_registration_registrants_max';
+  const FIELD_REGISTRATION_REGISTRANTS_MAXIMUM = 'rng_registrants_maximum';
 
   /**
    * Get the meta instance for an event.

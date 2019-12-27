@@ -10,9 +10,6 @@ use Drupal\courier\Service\IdentityChannelManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\rng\Entity\Rule;
 use Drupal\rng\Entity\RuleComponent;
-use Drupal\courier\Entity\TemplateCollection;
-use Drupal\courier\Service\CourierManagerInterface;
-use Drupal\Core\Action\ActionManager;
 
 /**
  * Meta event wrapper for RNG.
@@ -69,20 +66,6 @@ class EventMeta implements EventMetaInterface {
   protected $eventManager;
 
   /**
-   * The courier manager.
-   *
-   * @var \Drupal\courier\Service\CourierManagerInterface
-   */
-  protected $courier_manager;
-
-  /**
-   * The action manager.
-   *
-   * @var \Drupal\Core\Action\ActionManager
-   */
-  protected $action_manager;
-
-  /**
    * Constructs a new EventMeta object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -97,22 +80,16 @@ class EventMeta implements EventMetaInterface {
    *   The RNG configuration service.
    * @param \Drupal\rng\EventManagerInterface $event_manager
    *   The RNG event manager.
-   * @param \Drupal\courier\Service\CourierManagerInterface $courier_manager
-   *   The courier manager.
-   * @param \Drupal\Core\Action\ActionManager $action_manager
-   *   The action manager.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The event entity.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, SelectionPluginManagerInterface $selection_plugin_manager, IdentityChannelManagerInterface $identity_channel_manager, RngConfigurationInterface $rng_configuration, EventManagerInterface $event_manager, CourierManagerInterface $courier_manager, ActionManager $action_manager, EntityInterface $entity) {
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, SelectionPluginManagerInterface $selection_plugin_manager, IdentityChannelManagerInterface $identity_channel_manager, RngConfigurationInterface $rng_configuration, EventManagerInterface $event_manager, EntityInterface $entity) {
     $this->entityManager = $entity_manager;
     $this->configFactory = $config_factory;
     $this->selectionPluginManager = $selection_plugin_manager;
     $this->identityChannelManager = $identity_channel_manager;
     $this->rngConfiguration = $rng_configuration;
     $this->eventManager = $event_manager;
-    $this->courier_manager = $courier_manager;
-    $this->action_manager = $action_manager;
     $this->entity = $entity;
   }
 
@@ -127,8 +104,6 @@ class EventMeta implements EventMetaInterface {
       $container->get('plugin.manager.identity_channel'),
       $container->get('rng.configuration'),
       $container->get('rng.event_manager'),
-      $container->get('courier.manager'),
-      $container->get('plugin.manager.action'),
       $entity
     );
   }
@@ -173,7 +148,7 @@ class EventMeta implements EventMetaInterface {
    */
   public function getRegistrationTypeIds() {
     return array_map(function ($element) {
-      return isset($element['target_id']) ? $element['target_id'] : [];
+      return $element['target_id'];
     }, $this->getEvent()->{EventManagerInterface::FIELD_REGISTRATION_TYPE}->getValue());
   }
 
@@ -222,8 +197,8 @@ class EventMeta implements EventMetaInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRegistrantCapacity() {
-    $capacity = (int) $this->getEvent()->{EventManagerInterface::FIELD_REGISTRANTS_CAPACITY}->value;
+  public function getCapacity() {
+    $capacity = (int) $this->getEvent()->{EventManagerInterface::FIELD_CAPACITY}->value;
     if ($capacity != '' && is_numeric($capacity) && $capacity >= 0) {
       return $capacity;
     }
@@ -233,43 +208,13 @@ class EventMeta implements EventMetaInterface {
   /**
    * {@inheritdoc}
    */
-  public function remainingRegistrantCapacity() {
-    $capacity = $this->getRegistrantCapacity();
-    if ($capacity == EventMetaInterface::CAPACITY_UNLIMITED) {
-      return $capacity;
-    }
-    $remaining = $capacity - $this->countRegistrants();
-    return $remaining > 0 ? $remaining : 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRegistrationCapacity() {
-    $capacity = (int) $this->getEvent()->{EventManagerInterface::FIELD_REGISTRATIONS_CAPACITY}->value;
-    if ($capacity != '' && is_numeric($capacity) && $capacity >= 0) {
-      return $capacity;
-    }
-    return EventMetaInterface::CAPACITY_UNLIMITED;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function remainingRegistrationCapacity() {
-    $capacity = $this->getRegistrationCapacity();
+  public function remainingCapacity() {
+    $capacity = $this->getCapacity();
     if ($capacity == EventMetaInterface::CAPACITY_UNLIMITED) {
       return $capacity;
     }
     $remaining = $capacity - $this->countRegistrations();
     return $remaining > 0 ? $remaining : 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function allowWaitList() {
-    return (bool) $this->getEvent()->{EventManagerInterface::FIELD_WAIT_LIST}->value;
   }
 
   /**
@@ -323,21 +268,6 @@ class EventMeta implements EventMetaInterface {
   /**
    * {@inheritdoc}
    */
-  function buildEventRegistrantQuery() {
-    // TODO: Rebuild using non-deprecated solution.
-    $query = db_select('registrant', 'ant');
-    $query->join('registration', 'ion', 'ion.id = ant.registration');
-    $query->join('registration_field_data', 'rfd', 'ion.id = rfd.id');
-    $query->fields('ant', ['id']);
-    $query->condition('rfd.event__target_type', $this->getEvent()->getEntityTypeId(), '=');
-    $query->condition('rfd.event__target_id', $this->getEvent()->id(), '=');
-
-    return $query;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   function buildRegistrationQuery() {
     return $this->buildQuery('registration');
   }
@@ -348,13 +278,6 @@ class EventMeta implements EventMetaInterface {
   function getRegistrations() {
     $query = $this->buildRegistrationQuery();
     return $this->entityManager->getStorage('registration')->loadMultiple($query->execute());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function countRegistrants() {
-    return $this->buildEventRegistrantQuery()->countQuery()->execute()->fetchField();
   }
 
   /**
@@ -683,61 +606,6 @@ class EventMeta implements EventMetaInterface {
   protected function entityTypeHasBundles($entity_type_id) {
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
     return ($entity_type->getBundleEntityType() !== NULL);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function createDefaultEventMessages() {
-    // Get Default messages for this Event type.
-    $default_messages = $this->getEventType()->getDefaultMessages();
-    if ($default_messages) {
-      foreach ($default_messages as $default_message) {
-        // Create Event Messages from Default Messages.
-        $template_collection = TemplateCollection::create();
-        $template_collection->save();
-        $this->courier_manager->addTemplates($template_collection);
-        $template_collection->setOwner($this->getEvent());
-        $template_collection->save();
-
-        $templates = $template_collection->getTemplates();
-        /** @var \Drupal\courier\EmailInterface $courier_email */
-        $courier_email = $templates[0];
-        $courier_email->setSubject($default_message['subject']);
-        $courier_email->setBody($default_message['body']);
-        $courier_email->save();
-
-        $rule = Rule::create([
-          'event' => ['entity' => $this->getEvent()],
-          'trigger_id' => $default_message['trigger'],
-        ]);
-        $rule->setIsActive($default_message['status']);
-
-        $actionPlugin = $this->action_manager->createInstance('rng_courier_message');
-        $configuration = $actionPlugin->getConfiguration();
-        $configuration['template_collection'] = $template_collection->id();
-        $action = RuleComponent::create([])
-          ->setPluginId($actionPlugin->getPluginId())
-          ->setConfiguration($configuration)
-          ->setType('action');
-        $rule->addComponent($action);
-        $rule->save();
-
-        // Handle custom date trigger.
-        if ($default_message['trigger'] == 'rng:custom:date') {
-          $rule_component = RuleComponent::create()
-            ->setRule($rule)
-            ->setType('condition')
-            ->setPluginId('rng_rule_scheduler');
-          $rule_component->save();
-           // Save the ID into config.
-          $rule_component->setConfiguration([
-            'rng_rule_component' => $rule_component->id(),
-          ]);
-          $rule_component->save();
-        }
-      }
-    }
   }
 
 }

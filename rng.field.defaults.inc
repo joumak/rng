@@ -46,22 +46,10 @@ function rng_add_event_field_storage($field_name, $entity_type) {
       );
       break;
 
-    case EventManagerInterface::FIELD_REGISTRANTS_CAPACITY:
+    case EventManagerInterface::FIELD_CAPACITY:
       $definition = array(
         'type' => 'integer',
       );
-      break;
-
-    case EventManagerInterface::FIELD_REGISTRATIONS_CAPACITY:
-      $definition = array(
-        'type' => 'integer',
-      );
-      break;
-
-    case EventManagerInterface::FIELD_WAIT_LIST:
-      $definition = [
-        'type' => 'boolean',
-      ];
       break;
 
     case EventManagerInterface::FIELD_EMAIL_REPLY_TO:
@@ -129,17 +117,7 @@ function rng_event_field_config_definition($field_name) {
       );
       break;
 
-    case EventManagerInterface::FIELD_REGISTRANTS_CAPACITY:
-      $definition = array(
-        'label' => 'Maximum registrants',
-        'description' => t('Maximum amount of registrants for this event.'),
-        'settings' => array(
-          'min' => 1,
-        ),
-      );
-      break;
-
-    case EventManagerInterface::FIELD_REGISTRATIONS_CAPACITY:
+    case EventManagerInterface::FIELD_CAPACITY:
       $definition = array(
         'label' => 'Maximum registrations',
         'description' => t('Maximum amount of registrations for this event.'),
@@ -147,17 +125,6 @@ function rng_event_field_config_definition($field_name) {
           'min' => 1,
         ),
       );
-      break;
-
-    case EventManagerInterface::FIELD_WAIT_LIST:
-      $definition = [
-        'label' => 'Allow a wait list',
-        'description' => t('Allow a waiting list for the event.'),
-        'settings' => [
-          'on_label' => t('Allow a waiting list for this event'),
-          'off_label' => t('Do not allow a waiting list for this event'),
-        ],
-      ];
       break;
 
     case EventManagerInterface::FIELD_EMAIL_REPLY_TO:
@@ -180,7 +147,7 @@ function rng_event_field_config_definition($field_name) {
 
     case EventManagerInterface::FIELD_REGISTRATION_REGISTRANTS_MINIMUM:
       $definition = array(
-        'label' => 'Minimum registrants per registration',
+        'label' => 'Minimum registrants',
         'description' => t('Minimum number of registrants per registration.'),
         'settings' => [
           'min' => 0,
@@ -193,7 +160,7 @@ function rng_event_field_config_definition($field_name) {
 
     case EventManagerInterface::FIELD_REGISTRATION_REGISTRANTS_MAXIMUM:
       $definition = array(
-        'label' => 'Maximum registrants per registration',
+        'label' => 'Maximum registrants',
         'description' => t('Maximum number of registrants per registration.'),
         'settings' => [
           'min' => -1,
@@ -262,22 +229,10 @@ function rng_add_event_form_display_defaults(EntityFormDisplayInterface $form_di
       ));
       break;
 
-    case EventManagerInterface::FIELD_REGISTRANTS_CAPACITY:
+    case EventManagerInterface::FIELD_CAPACITY:
       $form_display->setComponent($field_name, array(
         'type' => 'unlimited_number',
       ));
-      break;
-
-    case EventManagerInterface::FIELD_REGISTRATIONS_CAPACITY:
-      $form_display->setComponent($field_name, array(
-        'type' => 'unlimited_number',
-      ));
-      break;
-
-    case EventManagerInterface::FIELD_WAIT_LIST:
-      $form_display->setComponent($field_name, [
-        'type' => 'boolean_checkbox',
-      ]);
       break;
 
     case EventManagerInterface::FIELD_EMAIL_REPLY_TO:

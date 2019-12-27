@@ -127,10 +127,6 @@ class Registrants extends FormElement {
     $arity_is_multiple = $utility->getArity() === 'multiple';
     $arity_is_single = !$arity_is_multiple;
     $change_it = $utility->getChangeIt();
-    if(count($for_bundles) == 1){
-      // Show the form directly if it's single persond and only one bundle:
-      $utility->setShowCreateEntitySubform(TRUE);
-    }
     $entity_create_form = $utility->getShowCreateEntitySubform();
 
     if (!$change_it) {
@@ -190,7 +186,7 @@ class Registrants extends FormElement {
     $element['for_arity'] = [
       '#type' => 'radios',
       '#title' => t('This registration is for'),
-      '#options' => [],
+      '#options' => NULL,
       '#access' => $for_arity_any_arity && $change_it,
       '#attributes' => [
         'class' => ['for_arity'],
@@ -291,7 +287,7 @@ class Registrants extends FormElement {
       '#title' => t('Person type'),
       '#options' => $for_bundles,
       '#default_value' => $for_bundle,
-      '#access' => $change_it && count($for_bundles) > 1,
+      '#access' => $change_it,
       '#ajax' => [
         'callback' => [static::class, 'ajaxElementRoot'],
         'wrapper' => $ajax_wrapper_id_root,
@@ -646,12 +642,6 @@ class Registrants extends FormElement {
    */
   public static function validateRegisterable(&$element, FormStateInterface $form_state, &$complete_form) {
     $utility = new RegistrantsElement($element, $form_state);
-
-    // Add existing registrants to whitelist.
-    foreach ($complete_form['registrants_before']['#value'] as $existing_registrant) {
-      $identity = $existing_registrant->getIdentity();
-      $utility->addWhitelistExisting($identity);
-    }
 
     /** @var \Drupal\rng\RegistrantInterface[] $registrants */
     $registrants = $element['#value'];

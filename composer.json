@@ -1,5 +1,5 @@
 {
-  "name": "freelock/rng",
+  "name": "drupal/rng",
   "description": "Provides ability to create and manage events and registrations.",
   "type": "drupal-module",
   "homepage": "http://drupal.org/project/rng",
@@ -9,16 +9,10 @@
   },
   "authors": [
     {
-      "name": "John Locke",
-      "email": "john@freelock.com",
-      "homepage": "https://www.freelock.com",
-      "role": "Maintainer"
-    },
-    {
       "name": "Daniel Phin",
       "email": "pro@danielph.in",
       "homepage": "http://danielph.in",
-      "role": "Former Maintainer"
+      "role": "Maintainer"
     }
   ],
   "license": "GPL-2.0+",

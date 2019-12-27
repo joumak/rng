@@ -8,7 +8,6 @@ use Drupal\rng\EventManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Modifies the reset access rules action.
@@ -71,7 +70,7 @@ class ResetAccessRules extends LocalActionDefault {
   /**
    * {@inheritdoc}
    */
-  public function getTitle(Request $request = NULL) {
+  public function getTitle() {
     $route = $this->routeProvider->getRouteByName($this->getRouteName());
     $param = $route->getDefault('event');
 

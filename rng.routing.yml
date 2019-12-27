@@ -127,68 +127,48 @@ entity.rng_rule_component.edit_form:
     _entity_access: 'rng_rule_component.update'
 
 # event_type entities
-entity.rng_event_type.add:
+entity.event_type.add:
   path: '/admin/structure/rng/event_types/add'
   defaults:
-    _entity_form: 'rng_event_type.add'
-    _title: 'Add RNG event type'
+    _entity_form: 'event_type.add'
+    _title: 'Add event type'
   requirements:
     _permission: 'administer event types'
 
-entity.rng_event_type.edit_form:
-  path: '/admin/structure/rng/event_types/manage/{rng_event_type}/edit'
+entity.event_type.edit_form:
+  path: '/admin/structure/rng/event_types/manage/{event_type}/edit'
   defaults:
-    _entity_form: 'rng_event_type.edit'
+    _entity_form: 'event_type.edit'
     _title: 'Edit event type'
   requirements:
     _permission: 'administer event types'
 
-entity.rng_event_type.delete_form:
-  path: '/admin/structure/rng/event_types/manage/{rng_event_type}/delete'
+entity.event_type.delete_form:
+  path: '/admin/structure/rng/event_types/manage/{event_type}/delete'
   defaults:
-    _entity_form: 'rng_event_type.delete'
+    _entity_form: 'event_type.delete'
     _title: 'Delete event type'
   requirements:
     _permission: 'administer event types'
 
-entity.rng_event_type.access_defaults:
-  path: '/admin/structure/rng/event_types/manage/{rng_event_type}/access_defaults'
+entity.event_type.access_defaults:
+  path: '/admin/structure/rng/event_types/manage/{event_type}/access_defaults'
   defaults:
-    _entity_form: 'rng_event_type.event_access_defaults'
+    _entity_form: 'event_type.event_access_defaults'
     _title: 'Event type access defaults'
   requirements:
     _permission: 'administer event types'
 
-entity.rng_event_type.default_messages:
-  path: '/admin/structure/rng/event_types/manage/{rng_event_type}/messages'
+entity.event_type.field_mapping:
+  path: '/admin/structure/rng/event_types/manage/{event_type}/field_mapping'
   defaults:
-    _entity_form: 'rng_event_type.event_default_messages'
-    _title: 'Event type Default messages'
-  requirements:
-    _permission: 'administer event types'
-
-entity.rng_event_type.default_messages.add:
-  path: '/admin/structure/rng/event_types/manage/{rng_event_type}/messages/add'
-  defaults:
-    _form: '\Drupal\rng\Form\EventTypeDefaultMessagesAddForm'
-    _title: 'Add message'
-  options:
-    parameters:
-      event_type:
-        type: entity:event_type
-  requirements:
-    _permission: 'administer event types'
-
-entity.rng_event_type.field_mapping:
-  path: '/admin/structure/rng/event_types/manage/{rng_event_type}/field_mapping'
-  defaults:
-    _entity_form: 'rng_event_type.field_mapping'
+    _entity_form: 'event_type.field_mapping'
     _title: 'Field mapping'
   requirements:
     _permission: 'administer event types'
 
-entity.rng_event_type.access_defaults.delete_all:
-  path: '/admin/structure/rng/event_types/manage/{rng_event_type}/access_defaults/delete'
+entity.event_type.access_defaults.delete_all:
+  path: '/admin/structure/rng/event_types/manage/{event_type}/access_defaults/delete'
   defaults:
     _form: '\Drupal\rng\Form\EventTypeRuleDeleteAll'
     _title: 'Delete all event custom rules'
@@ -199,11 +179,11 @@ entity.rng_event_type.access_defaults.delete_all:
       rng_event_type_rule:
         type: 'entity:rng_event_type_rule'
 
-rng.rng_event_type.overview:
+rng.event_type.overview:
   path: '/admin/structure/rng/event_types'
   defaults:
     _controller: '\Drupal\Core\Entity\Controller\EntityListController::listing'
-    entity_type: 'rng_event_type'
+    entity_type: 'event_type'
     _title: 'Event types'
   requirements:
     _permission: 'administer event types'
@@ -224,15 +204,6 @@ rng.rng_event_type_rule.component.edit:
         type: 'rng_component_type'
       component_id:
         type: 'rng_component_id'
-
-# RNG Structure overview
-rng.structure:
-  path: '/admin/structure/rng'
-  defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-    _title: 'RNG'
-  requirements:
-    _permission: 'access administration pages'
 
 # RNG Configuration
 rng.config:

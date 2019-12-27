@@ -15,7 +15,7 @@ use Drupal\rng\RegistrantTypeInterface;
  * Defines the event type entity.
  *
  * @ConfigEntityType(
- *   id = "rng_event_type",
+ *   id = "event_type",
  *   label = @Translation("Event type"),
  *   handlers = {
  *     "list_builder" = "\Drupal\rng\Lists\EventTypeListBuilder",
@@ -24,25 +24,24 @@ use Drupal\rng\RegistrantTypeInterface;
  *       "edit" = "Drupal\rng\Form\EventTypeForm",
  *       "delete" = "Drupal\rng\Form\EventTypeDeleteForm",
  *       "event_access_defaults" = "Drupal\rng\Form\EventTypeAccessDefaultsForm",
- *       "event_default_messages" = "Drupal\rng\Form\EventTypeDefaultMessagesListForm",
  *       "field_mapping" = "Drupal\rng\Form\EventTypeFieldMappingForm",
  *     }
  *   },
  *   admin_permission = "administer event types",
- *   config_prefix = "rng_event_type",
+ *   config_prefix = "event_type",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "id"
  *   },
  *   links = {
- *     "edit-form" = "/admin/structure/rng/event_types/manage/{rng_event_type}/edit",
- *     "delete-form" = "/admin/structure/rng/event_types/manage/{rng_event_type}/delete",
- *     "event-access-defaults" = "/admin/structure/rng/event_types/manage/{rng_event_type}/access_defaults",
- *     "field-mapping" = "/admin/structure/rng/event_types/manage/{rng_event_type}/field_mapping",
+ *     "edit-form" = "/admin/structure/rng/event_types/manage/{event_type}/edit",
+ *     "delete-form" = "/admin/structure/rng/event_types/manage/{event_type}/delete",
+ *     "event-access-defaults" = "/admin/structure/rng/event_types/manage/{event_type}/access_defaults",
+ *     "field-mapping" = "/admin/structure/rng/event_types/manage/{event_type}/field_mapping",
  *   }
  * )
  */
-class RngEventType extends ConfigEntityBase implements EventTypeInterface {
+class EventType extends ConfigEntityBase implements EventTypeInterface {
 
   /**
    * The machine name of this event config.
@@ -108,13 +107,6 @@ class RngEventType extends ConfigEntityBase implements EventTypeInterface {
   protected $people_types = [];
 
   /**
-   * Default messages configured for this event type.
-   *
-   * @var array
-   */
-  protected $default_messages = [];
-
-  /**
    * Fields to add to event bundles.
    *
    * @var array
@@ -123,9 +115,7 @@ class RngEventType extends ConfigEntityBase implements EventTypeInterface {
     EventManagerInterface::FIELD_REGISTRATION_TYPE,
     EventManagerInterface::FIELD_REGISTRATION_GROUPS,
     EventManagerInterface::FIELD_STATUS,
-    EventManagerInterface::FIELD_WAIT_LIST,
-    EventManagerInterface::FIELD_REGISTRANTS_CAPACITY,
-    EventManagerInterface::FIELD_REGISTRATIONS_CAPACITY,
+    EventManagerInterface::FIELD_CAPACITY,
     EventManagerInterface::FIELD_EMAIL_REPLY_TO,
     EventManagerInterface::FIELD_ALLOW_DUPLICATE_REGISTRANTS,
     EventManagerInterface::FIELD_REGISTRATION_REGISTRANTS_MINIMUM,
@@ -202,21 +192,6 @@ class RngEventType extends ConfigEntityBase implements EventTypeInterface {
   /**
    * {@inheritdoc}
    */
-  function getDefaultMessages() {
-    return $this->default_messages;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function setDefaultMessages($messages) {
-    $this->default_messages = $messages;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function canIdentityTypeCreate($entity_type, $bundle) {
     $key = $this->getIdentityTypeKey($entity_type, $bundle);
     return !empty($this->people_types[$key]['create']);
@@ -236,7 +211,7 @@ class RngEventType extends ConfigEntityBase implements EventTypeInterface {
    */
   public function getIdentityTypeEntityFormMode($entity_type, $bundle) {
     $key = $this->getIdentityTypeKey($entity_type, $bundle);
-    return !empty($this->people_types[$key]['entity_form_mode']) ? $this->people_types[$key]['entity_form_mode'] : 'default';
+    return !empty($this->people_types[$key]['entity_form_mode']);
   }
 
   /**
@@ -410,9 +385,7 @@ class RngEventType extends ConfigEntityBase implements EventTypeInterface {
       $field_weights = [
         EventManagerInterface::FIELD_STATUS,
         EventManagerInterface::FIELD_ALLOW_DUPLICATE_REGISTRANTS,
-        EventManagerInterface::FIELD_WAIT_LIST,
-        EventManagerInterface::FIELD_REGISTRANTS_CAPACITY,
-        EventManagerInterface::FIELD_REGISTRATIONS_CAPACITY,
+        EventManagerInterface::FIELD_CAPACITY,
         EventManagerInterface::FIELD_EMAIL_REPLY_TO,
         EventManagerInterface::FIELD_REGISTRATION_TYPE,
         EventManagerInterface::FIELD_REGISTRATION_GROUPS,
@@ -464,7 +437,7 @@ class RngEventType extends ConfigEntityBase implements EventTypeInterface {
     parent::postDelete($storage, $entities);
 
     if ($event_type = reset($entities)) {
-      RngEventType::courierContextCC($event_type->entity_type, 'delete');
+      EventType::courierContextCC($event_type->entity_type, 'delete');
     }
 
     // Rebuild routes and local tasks.
