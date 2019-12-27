@@ -36,10 +36,10 @@ class RngEventTypeAccessDefaultsTest extends RngWebTestBase {
       'bundle' => 'entity_test.entity_test',
       'registrants[registrant_type]' => 'registrant',
     ];
-    $this->drupalPostForm(Url::fromRoute('entity.rng_event_type.add'), $edit, t('Save'));
+    $this->drupalPostForm(Url::fromRoute('entity.event_type.add'), $edit, t('Save'));
 
-    $defaults_route = Url::fromRoute('entity.rng_event_type.access_defaults', [
-      'rng_event_type' => 'entity_test.entity_test',
+    $defaults_route = Url::fromRoute('entity.event_type.access_defaults', [
+      'event_type' => 'entity_test.entity_test',
     ]);
     $this->drupalGet($defaults_route);
 

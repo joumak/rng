@@ -58,7 +58,7 @@ class RngEventTypeTest extends RngWebTestBase {
     $this->assertEqual(0, count(CourierContext::loadMultiple()), 'There are no courier context entities.');
 
     // Local action.
-    $this->assertLinkByHref(Url::fromRoute('entity.rng_event_type.add')->toString());
+    $this->assertLinkByHref(Url::fromRoute('entity.event_type.add')->toString());
 
     // Add.
     $t_args = ['%label' => 'node.event'];

@@ -4,7 +4,7 @@ namespace Drupal\rng\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\rng\EventTypeInterface;
+use Drupal\rng\Entity\EventType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,14 +15,14 @@ class EventTypeDefaultMessagesAddForm extends FormBase {
   /**
    * The event type object.
    *
-   * @var \Drupal\rng\EventTypeInterface
+   * @var \Drupal\rng\Entity\EventType
    */
   public $eventType;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(EventTypeInterface $event_type) {
+  public function __construct(EventType $event_type) {
     $this->eventType = $event_type;
   }
 
@@ -31,7 +31,7 @@ class EventTypeDefaultMessagesAddForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('current_route_match')->getParameter('rng_event_type')
+      $container->get('current_route_match')->getParameter('event_type')
     );
   }
 
@@ -99,7 +99,7 @@ class EventTypeDefaultMessagesAddForm extends FormBase {
     $this->eventType->setDefaultMessages($messages)->save();
 
     $this->messenger()->addMessage($this->t('New message added.'));
-    $form_state->setRedirect('entity.rng_event_type.default_messages', ['rng_event_type' => $this->eventType->id()]);
+    $form_state->setRedirect('entity.event_type.default_messages', ['event_type' => $this->eventType->id()]);
   }
 
 }

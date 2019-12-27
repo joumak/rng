@@ -3,10 +3,10 @@ rng.local_actions:
   deriver: \Drupal\rng\Plugin\Derivative\LocalActions
 
 rng.default_messages.add_form:
-  route_name: entity.rng_event_type.default_messages.add
+  route_name: entity.event_type.default_messages.add
   title: 'Add message'
   appears_on:
-    - entity.rng_event_type.default_messages
+    - entity.event_type.default_messages
 
 rng.registration_type.add:
   route_name: entity.registration_type.add

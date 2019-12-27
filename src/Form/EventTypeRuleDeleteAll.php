@@ -92,7 +92,7 @@ class EventTypeRuleDeleteAll extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return Url::fromRoute('entity.rng_event_type.access_defaults', [
+    return Url::fromRoute('entity.event_type.access_defaults', [
       'event_type' => $this->eventType->id(),
     ]);
   }

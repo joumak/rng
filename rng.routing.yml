@@ -174,8 +174,8 @@ entity.rng_event_type.default_messages.add:
     _title: 'Add message'
   options:
     parameters:
-      rng_event_type:
-        type: entity:rng_event_type
+      event_type:
+        type: entity:event_type
   requirements:
     _permission: 'administer event types'
 
