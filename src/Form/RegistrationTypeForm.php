@@ -94,6 +94,7 @@ class RegistrationTypeForm extends EntityForm {
     $t_args = ['%label' => $registration_type->label(), 'link' => Link::fromTextAndUrl(t('Edit'), $url)];
 
     $this->messenger()->addMessage($this->t($message, $t_args));
+    unset($t_args['link']);
     $this->logger('rng')->notice($message, $t_args);
 
     $form_state->setRedirect('rng.registration_type.overview');
