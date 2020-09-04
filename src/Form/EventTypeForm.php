@@ -416,6 +416,7 @@ class EventTypeForm extends EntityForm {
     $t_args = ['%label' => $event_type->id(), 'link' => Link::fromTextAndUrl(t('Edit'), $url)];
 
     $this->messenger()->addMessage($this->t($message, $t_args));
+    unlink($t_args['link']);
     $this->logger('rng')->notice($message, $t_args);
   }
 
