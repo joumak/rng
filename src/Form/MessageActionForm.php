@@ -59,7 +59,7 @@ class MessageActionForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.action'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('rng.event_manager')
     );
   }
