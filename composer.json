@@ -19,7 +19,7 @@
   "require": {
     "drupal/dynamic_entity_reference": "^1.0",
     "drupal/courier": "^2.0",
-    "drupal/unlimited_number": "^1.0@beta"
+    "drupal/unlimited_number": "^2.0"
   },
   "suggest": {
     "drupal/token": " Improves token UI on message template forms.",
