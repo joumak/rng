@@ -1,8 +1,0 @@
-name: 'rng_courier'
-type: module
-description: 'Courier integration for RNG'
-core_version_requirement: ^8.8.4 || ^9.0
-package: 'RNG'
-dependencies:
-  - rng:rng
-  - courier:courier
