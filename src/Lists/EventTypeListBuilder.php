@@ -40,8 +40,8 @@ class EventTypeListBuilder extends ConfigEntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity_type.manager')->getStorage($entity_type->id()),
-      $container->get('entity_type.manager'),
+      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('entity.manager'),
       $container->get('current_user')
     );
   }
