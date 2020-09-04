@@ -18,7 +18,7 @@
   "license": "GPL-2.0+",
   "require": {
     "drupal/dynamic_entity_reference": "^1.0",
-    "drupal/courier": "^1.0@alpha",
+    "drupal/courier": "^2.0",
     "drupal/unlimited_number": "^1.0@beta"
   },
   "suggest": {
